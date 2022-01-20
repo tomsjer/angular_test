@@ -9,10 +9,9 @@ describe('PortMapComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientModule ],
-      declarations: [ PortMapComponent ]
-    })
-    .compileComponents();
+      imports: [HttpClientModule],
+      declarations: [PortMapComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

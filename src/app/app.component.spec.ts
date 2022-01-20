@@ -13,7 +13,12 @@ describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule.withRoutes(appRoutes), HttpClientModule],
-      declarations: [AppComponent, HomeComponent, PortMapComponent, PageNotFoundComponent],
+      declarations: [
+        AppComponent,
+        HomeComponent,
+        PortMapComponent,
+        PageNotFoundComponent
+      ],
       providers: [ApiService]
     }).compileComponents();
   }));

@@ -13,8 +13,8 @@ import { CounterComponent } from './components/counter/counter.component';
     RouterModule,
     CounterRoutingModule,
     StoreModule.forFeature('counter', counterReducer),
-    EffectsModule.forFeature([CounterEffects]),
+    EffectsModule.forFeature([CounterEffects])
   ],
   declarations: [CounterComponent]
 })
-export class CounterModule { }
+export class CounterModule {}

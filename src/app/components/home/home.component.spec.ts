@@ -10,10 +10,9 @@ describe('HomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientModule ],
-      declarations: [ HomeComponent, PortMapComponent ]
-    })
-    .compileComponents();
+      imports: [HttpClientModule],
+      declarations: [HomeComponent, PortMapComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

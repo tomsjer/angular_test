@@ -31,4 +31,9 @@ export class Reset implements Action {
   readonly type = CounterActionTypes.RESET;
 }
 
-export type CounterActions = Increment | Decrement | AsyncIncrement | AsyncIncrementSuccess | Reset;
+export type CounterActions =
+  | Increment
+  | Decrement
+  | AsyncIncrement
+  | AsyncIncrementSuccess
+  | Reset;

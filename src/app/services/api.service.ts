@@ -30,7 +30,7 @@ export class ApiService {
       })
       .pipe(
         map((data: any) => data.ports),
-        catchError(err => of(err))
+        catchError((err) => of(err))
       );
   }
 }

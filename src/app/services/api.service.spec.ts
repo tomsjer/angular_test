@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 describe('ApiService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientModule ],
+      imports: [HttpClientModule],
       providers: [ApiService]
     });
   });

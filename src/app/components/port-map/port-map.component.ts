@@ -56,7 +56,7 @@ export class PortMapComponent implements AfterViewInit {
     ).addTo(this._map);
 
     // Add the port/cruise layers
-    this._icons = LAYER_DEFS.map(def =>
+    this._icons = LAYER_DEFS.map((def) =>
       L.icon({
         iconUrl: def.icon,
         iconSize: [25, 25],
@@ -64,8 +64,8 @@ export class PortMapComponent implements AfterViewInit {
         popupAnchor: [0, -25]
       })
     );
-    this._iconLayers = LAYER_DEFS.map(def => new L.LayerGroup());
-    this._iconLayers.forEach(l => this._map.addLayer(l));
+    this._iconLayers = LAYER_DEFS.map((def) => new L.LayerGroup());
+    this._iconLayers.forEach((l) => this._map.addLayer(l));
 
     // Whenever the user pans, load data for the new bounds
     this._map.on('moveend', () => this.loadLayerData(this._map.getBounds()));
@@ -75,7 +75,7 @@ export class PortMapComponent implements AfterViewInit {
 
   loadLayerData(bounds) {
     LAYER_DEFS.forEach((def, i) => {
-      this.requestData(bounds, def).subscribe(harbors => {
+      this.requestData(bounds, def).subscribe((harbors) => {
         this.renderHarbors(harbors, this._icons[i], this._iconLayers[i]);
       });
     });

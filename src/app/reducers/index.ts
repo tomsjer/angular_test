@@ -1,8 +1,4 @@
-import {
-  ActionReducerMap,
-  ActionReducer,
-  MetaReducer
-} from '@ngrx/store';
+import { ActionReducerMap, ActionReducer, MetaReducer } from '@ngrx/store';
 import { environment } from '../../environments/environment';
 import * as fromRouter from '@ngrx/router-store';
 
@@ -32,7 +28,7 @@ export const reducers: ActionReducerMap<State> = {
 
 // console.log all actions
 export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
-  return function(state: State, action: any): State {
+  return function (state: State, action: any): State {
     const newState = reducer(state, action);
     console.log('action', action, {
       prevState: state,

@@ -15,7 +15,10 @@ const initialState: CounterState = {
   incrementing: false
 };
 
-export function reducer(state: CounterState = initialState, action: CounterActions) {
+export function reducer(
+  state: CounterState = initialState,
+  action: CounterActions
+) {
   switch (action.type) {
     case CounterActionTypes.INCREMENT:
       return { ...state, count: state.count + 1 };
