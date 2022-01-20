@@ -53,7 +53,7 @@ export class PortMapComponent implements AfterViewInit {
     const element = this.mapRef.nativeElement;
 
     // Initialize the Leaflet map
-    this._map = L.map(element, { trackResize: false }).setView(
+    this._map = L.map(element, { trackResize: true, minZoom: 4 }).setView(
       START_LATLNG,
       START_ZOOM
     );

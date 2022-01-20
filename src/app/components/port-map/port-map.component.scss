@@ -2,4 +2,7 @@
   width: 100%;
   height: calc(100% - 64px);
   margin: auto;
+  position: absolute;
+  top: 64px;
+  z-index: -1;
 }

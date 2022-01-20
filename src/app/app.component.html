@@ -1,18 +1,3 @@
-<!-- <h1>Expero Shipping Planner</h1>
-<nav class="nav">
-  <a
-    routerLink="/"
-    routerLinkActive="active-link"
-    [routerLinkActiveOptions]="{ exact: true }"
-    >Home</a
-  >
-  <a
-    routerLink="/counter"
-    routerLinkActive="active-link"
-    [routerLinkActiveOptions]="{ exact: true }"
-    >Counter</a
-  >
-</nav> -->
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav
     #drawer
@@ -22,7 +7,7 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="!(isHandset$ | async)"
   >
-    <mat-toolbar color="primary"></mat-toolbar>
+    <mat-toolbar color="primary" class="mat-elevation-z2"></mat-toolbar>
 
     <app-ports-list
       [ports]="ports$ | async"
@@ -33,7 +18,7 @@
     ></app-ports-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" class="mat-elevation-z2">
       <button
         type="button"
         aria-label="Toggle sidenav"

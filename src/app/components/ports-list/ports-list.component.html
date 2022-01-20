@@ -1,14 +1,23 @@
-<div *ngFor="let layer of layers">
-  <mat-slide-toggle
-    (change)="onChange.emit(layer.type)"
-    [checked]="layer.active"
-    >{{ layer.name }}</mat-slide-toggle
-  >
-</div>
+<mat-list>
+  <mat-list-item *ngFor="let layer of layers">
+    <mat-slide-toggle
+      (change)="onChange.emit(layer.type)"
+      [checked]="layer.active"
+      >{{ layer.name }}</mat-slide-toggle
+    >
+  </mat-list-item>
+</mat-list>
 <mat-divider></mat-divider>
-<div *ngFor="let port of ports" (click)="onClick.emit(port.id)">
-  <p>
-    {{ port.name }} - {{ port.id }}
-    <b *ngIf="port.id === selectedPort?.id">Selected</b>
-  </p>
-</div>
+<mat-nav-list>
+  <mat-list-item *ngFor="let port of ports" (click)="onClick.emit(port.id)">
+    {{ port.name }}
+    <div *ngIf="port.id === selectedPort?.id">
+      <a
+        [routerLink]="port.id"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: true }"
+        >Details</a
+      >
+    </div>
+  </mat-list-item>
+</mat-nav-list>
