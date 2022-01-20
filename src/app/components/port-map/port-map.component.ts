@@ -24,8 +24,8 @@ export class PortMapComponent implements AfterViewInit {
   @ViewChild('mapRef') mapRef: ElementRef;
   @Input('layerDefs') layerDefs: Layer[] = [];
   _map: any;
-  _icons: any;
-  _iconLayers: any;
+  _iconsMap: any;
+  _iconLayersMap: any;
   _requestId: any;
 
   layers$ = this.store.select(getLayers);
@@ -64,51 +64,49 @@ export class PortMapComponent implements AfterViewInit {
     ).addTo(this._map);
 
     // Add the port/cruise layers
-    this._icons = this.layerDefs.map((def) =>
-      L.icon({
-        iconUrl: def.icon,
+    this._iconsMap = this.layerDefs.reduce((acc, curr) => {
+      acc[curr.type] = L.icon({
+        iconUrl: curr.icon,
         iconSize: [25, 25],
         iconAnchor: [25, 25],
         popupAnchor: [0, -25]
-      })
-    );
-    this._iconLayers = this.layerDefs.map((def) => new L.LayerGroup());
-    this._iconLayers.forEach((l) => this._map.addLayer(l));
+      });
+      return acc;
+    }, {});
+
+    this._iconLayersMap = this.layerDefs.reduce((acc, curr) => {
+      acc[curr.type] = new L.LayerGroup();
+      this._map.addLayer(acc[curr.type]);
+      return acc;
+    }, {});
 
     // Whenever the user pans, load data for the new bounds
     this._map.on('moveend', () => this.loadLayerData(this._map.getBounds()));
 
-    this.store.select(getPorts).subscribe((harbors) => {
-      this.layerDefs.forEach((def, i) => {
-        this.renderHarbors(harbors, this._icons[i], this._iconLayers[i]);
-      });
-    });
+    this.store
+      .select(getPorts)
+      .subscribe((harbors) => this.renderHarbors(harbors));
 
-    // this.layers$.subscribe((layers) => {
-    //   this.layerDefs.forEach((def, i) => {
-    //     if (def.active) {
-    //       this.loadLayerData(this._map.getBounds());
-    //     } else {
-    //       this._iconLayers[i].clearLayers();
-    //     }
-    //   });
-    // });
+    this.layers$.subscribe((layers) => {
+      this.layerDefs = layers;
+      this.loadLayerData(this._map.getBounds());
+    });
 
     this.loadLayerData(this._map.getBounds());
   }
 
   loadLayerData(bounds) {
     this.layerDefs
-      .filter((layer) => layer.active)
-      .forEach((def, i) => {
-        this.requestData(bounds, def);
-      });
+      .filter((layer) => !layer.active)
+      .forEach((layer) => this._iconLayersMap[layer.type].clearLayers());
+    this.requestData(bounds);
   }
 
-  requestData(bounds, def) {
+  requestData(bounds) {
+    const activeLayers = this.layerDefs.filter((layer) => layer.active);
     this.store.dispatch(
       new AsyncGet({
-        portType: def.type,
+        activeLayers,
         minlat: bounds._southWest.lat,
         minlon: bounds._southWest.lng,
         maxlat: bounds._northEast.lat,
@@ -123,10 +121,11 @@ export class PortMapComponent implements AfterViewInit {
     }).bindPopup(`<b>${harbor.name}</b><br>city: ${harbor.city}`);
   }
 
-  renderHarbors(harbors, icon, layer) {
-    layer.clearLayers();
+  renderHarbors(harbors) {
     for (const harbor of harbors) {
-      layer.addLayer(this.createMarker(harbor, icon));
+      this._iconLayersMap[harbor.type].addLayer(
+        this.createMarker(harbor, this._iconsMap[harbor.type])
+      );
     }
   }
 }

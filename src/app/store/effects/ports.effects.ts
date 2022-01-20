@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { merge, Observable, of } from 'rxjs';
+import { forkJoin, merge, Observable, of } from 'rxjs';
 import { map, switchMap, catchError, exhaustMap } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import {
@@ -20,18 +20,11 @@ export class PortsEffects {
   @Effect()
   asyncGet$ = this.actions$.pipe(
     ofType(PortsActionTypes.ASYNC_GET),
-    switchMap((action: PortActions) =>
-      this.harborService
+    switchMap((action: PortActions) => {
+      const types = action.payload.activeLayers;
+      return this.harborService
         .getHarbors(action.payload)
-        .pipe(
-          map(
-            (ports) =>
-              new AsyncGetSuccess({
-                ports: ports,
-                type: action.payload.portType
-              })
-          )
-        )
-    )
+        .pipe(map((ports) => new AsyncGetSuccess(ports)));
+    })
   );
 }

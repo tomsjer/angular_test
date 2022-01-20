@@ -3,6 +3,7 @@ import { Port } from '../models/port.model';
 import { PortsActionTypes, PortActions } from '../actions/ports.actions';
 import { PortsState } from '../models/port.model';
 import { AppState } from '.';
+import { Actions } from '@ngrx/effects';
 
 const initialState: PortsState = {
   ports: [],
@@ -17,11 +18,7 @@ export function reducer(state: PortsState = initialState, action: PortActions) {
       return { ...state, loading: true };
 
     case PortsActionTypes.ASYNC_GET_SUCCESS:
-      const ports = [
-        ...state.ports.filter((port) => port.type !== action.payload.type),
-        ...action.payload.ports
-      ];
-      return { ...state, loading: false, ports };
+      return { ...state, loading: false, ports: action.payload };
 
     case PortsActionTypes.ASYNC_GET_ERROR:
       return { ...state, loading: false };
