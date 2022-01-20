@@ -18,17 +18,10 @@ export class HomeComponent implements OnInit {
   layers$ = this.store.select(getLayers);
   ports$ = this.store.select(getPorts);
   selectedPort$ = this.store.select(getSelectedPort);
+
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {}
-
-  onChange(type) {
-    this.store.dispatch(new ToggleActive(type));
-  }
-
-  onClick(id) {
-    this.store.dispatch(new SelectPort(id));
-  }
 
   // public isSelected(id: string):boolean {
   //   return this.selectedPort$.

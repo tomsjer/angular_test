@@ -1,4 +1,4 @@
-<h1>Expero Shipping Planner</h1>
+<!-- <h1>Expero Shipping Planner</h1>
 <nav class="nav">
   <a
     routerLink="/"
@@ -12,5 +12,40 @@
     [routerLinkActiveOptions]="{ exact: true }"
     >Counter</a
   >
-</nav>
-<router-outlet></router-outlet>
+</nav> -->
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport="true"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)"
+  >
+    <mat-toolbar color="primary"></mat-toolbar>
+
+    <app-ports-list
+      [ports]="ports$ | async"
+      [layers]="layers$ | async"
+      [selectedPort]="selectedPort$ | async"
+      (onChange)="onChange($event)"
+      (onClick)="onClick($event)"
+    ></app-ports-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async"
+      >
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Expero Shipping Planner</span>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

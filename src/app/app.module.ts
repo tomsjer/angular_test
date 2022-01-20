@@ -11,12 +11,16 @@ import { metaReducers, reducers } from './store/reducers';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
 import { PortsEffects } from './store/effects/ports.effects';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CustomMaterialModule } from './modules/material/custom-material.module';
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    CustomMaterialModule,
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
     StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([PortsEffects]),

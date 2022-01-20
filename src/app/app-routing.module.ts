@@ -8,6 +8,7 @@ import { NgModule } from '@angular/core';
 import { PortMapComponent } from './components/port-map/port-map.component';
 import { PortsListComponent } from './components/ports-list/ports-list.component';
 import { SideBarComponent } from './components/side-bar/side-bar.component';
+import { CustomMaterialModule } from './modules/material/custom-material.module';
 
 export const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Home ' } },
@@ -20,7 +21,11 @@ export const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forRoot(appRoutes)],
+  imports: [
+    CommonModule,
+    CustomMaterialModule,
+    RouterModule.forRoot(appRoutes)
+  ],
   declarations: [
     AppComponent,
     PageNotFoundComponent,

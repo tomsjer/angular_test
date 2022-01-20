@@ -1,16 +1,11 @@
 <div *ngFor="let layer of layers">
-  <p>{{ layer.name }} - {{ layer.type }}</p>
-  <label>
-    active
-    <input
-      type="checkbox"
-      (change)="onChange.emit(layer.type)"
-      [checked]="layer.active"
-    />
-  </label>
+  <mat-slide-toggle
+    (change)="onChange.emit(layer.type)"
+    [checked]="layer.active"
+    >{{ layer.name }}</mat-slide-toggle
+  >
 </div>
-<div>SELECTED: {{ selectedPort | json }}</div>
-
+<mat-divider></mat-divider>
 <div *ngFor="let port of ports" (click)="onClick.emit(port.id)">
   <p>
     {{ port.name }} - {{ port.id }}

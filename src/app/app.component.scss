@@ -17,3 +17,21 @@
   font-weight: bold;
   text-decoration: underline;
 }
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 200px;
+  overflow-x: hidden;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+}
+
+.mat-drawer-content {
+  height: 100vh;
+}
