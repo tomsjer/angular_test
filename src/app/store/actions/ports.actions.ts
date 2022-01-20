@@ -9,7 +9,7 @@ export enum PortsActionTypes {
 
 export class AsyncGet implements Action {
   readonly type = PortsActionTypes.ASYNC_GET;
-  constructor(public payload?: PortQueryParams) {}
+  constructor(public payload?: any) {}
 }
 
 export class AsyncGetSuccess implements Action {

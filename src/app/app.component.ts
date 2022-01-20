@@ -11,10 +11,10 @@ import { getPorts, getLoading } from './store/reducers/ports.reducer';
 })
 export class AppComponent implements OnInit {
   title = 'dev-ui-test-angular';
-  ports$ = this.store.select(getPorts);
-  loading$ = this.store.select(getLoading);
+  // ports$ = this.store.select(getPorts);
+  // loading$ = this.store.select(getLoading);
   constructor(private store: Store<AppState>) {}
   ngOnInit() {
-    this.store.dispatch(new AsyncGet());
+    // this.store.dispatch(new AsyncGet());
   }
 }

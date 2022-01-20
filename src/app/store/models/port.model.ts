@@ -1,6 +1,6 @@
 export enum PortType {
   PORT = 'port',
-  HARBOR = 'cruise'
+  CRUISE = 'cruise'
 }
 
 export interface Port {
@@ -26,4 +26,6 @@ export interface PortQueryParams {
 export interface PortsState {
   ports: Port[];
   loading: boolean;
+  START_LATLNG: number[];
+  START_ZOOM: number;
 }

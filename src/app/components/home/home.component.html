@@ -1,1 +1,8 @@
 <app-port-map></app-port-map>
+<div *ngFor="let layer of layers$ | async">
+  <p>{{ layer.name }} - {{ layer.type }}</p>
+  <label>
+    active
+    <input type="checkbox" (change)="onChange($event)" />
+  </label>
+</div>

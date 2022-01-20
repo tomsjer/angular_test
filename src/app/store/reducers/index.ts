@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import * as fromRouter from '@ngrx/router-store';
 import { reducer as portsReducer } from './ports.reducer';
 import { PortsState } from '../models/port.model';
+import { reducer as layersReducer } from './layer.reducer';
 
 /**
  * storeFreeze prevents state from being mutated. When mutation occurs, an
@@ -10,6 +11,7 @@ import { PortsState } from '../models/port.model';
  * ensure that none of the reducers accidentally mutates the state.
  */
 import { storeFreeze } from 'ngrx-store-freeze';
+import { LayerState } from '../models/layer.model';
 
 /**
  * As mentioned, we treat each reducer like a table in a database. This means
@@ -18,6 +20,7 @@ import { storeFreeze } from 'ngrx-store-freeze';
 export interface AppState {
   router: fromRouter.RouterReducerState;
   ports: PortsState;
+  layers: LayerState;
 }
 
 /**
@@ -27,7 +30,8 @@ export interface AppState {
  */
 export const reducers: ActionReducerMap<AppState> = {
   router: fromRouter.routerReducer,
-  ports: portsReducer
+  ports: portsReducer,
+  layers: layersReducer
 };
 
 // console.log all actions

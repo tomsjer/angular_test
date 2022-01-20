@@ -6,7 +6,9 @@ import { AppState } from '.';
 
 const initialState: PortsState = {
   ports: [],
-  loading: false
+  loading: false,
+  START_LATLNG: [28.913943, -94.131125],
+  START_ZOOM: 7
 };
 
 export function reducer(state: PortsState = initialState, action: PortActions) {
@@ -15,7 +17,7 @@ export function reducer(state: PortsState = initialState, action: PortActions) {
       return { ...state, loading: true };
 
     case PortsActionTypes.ASYNC_GET_SUCCESS:
-      return { ...state, loading: false };
+      return { ...state, loading: false, ports: action.payload };
 
     case PortsActionTypes.ASYNC_GET_ERROR:
       return { ...state, loading: false };

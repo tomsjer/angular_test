@@ -7,6 +7,11 @@ import {
 } from '@angular/core';
 import L from 'leaflet';
 import { ApiService } from '../../services/api.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/reducers';
+import { getPorts, getLoading } from '../../store/reducers/ports.reducer';
+import { AsyncGet } from 'src/app/store/actions/ports.actions';
+import { getLayers } from 'src/app/store/reducers/layer.reducer';
 
 const LAYER_DEFS = [
   { type: 'port', icon: '/assets/icons/cruise.png', name: 'Ports' },
@@ -26,7 +31,13 @@ export class PortMapComponent implements AfterViewInit {
   _iconLayers: any;
   _requestId: any;
 
-  constructor(private elem: ElementRef, public apiService: ApiService) {}
+  layers$ = this.store.select(getLayers);
+
+  constructor(
+    private elem: ElementRef,
+    public apiService: ApiService,
+    public store: Store<AppState>
+  ) {}
 
   ngAfterViewInit() {
     const START_LATLNG = [28.913943, -94.131125];
@@ -70,25 +81,31 @@ export class PortMapComponent implements AfterViewInit {
     // Whenever the user pans, load data for the new bounds
     this._map.on('moveend', () => this.loadLayerData(this._map.getBounds()));
 
+    this.store.select(getPorts).subscribe((harbors) => {
+      LAYER_DEFS.forEach((def, i) => {
+        this.renderHarbors(harbors, this._icons[i], this._iconLayers[i]);
+      });
+    });
+
     this.loadLayerData(this._map.getBounds());
   }
 
   loadLayerData(bounds) {
     LAYER_DEFS.forEach((def, i) => {
-      this.requestData(bounds, def).subscribe((harbors) => {
-        this.renderHarbors(harbors, this._icons[i], this._iconLayers[i]);
-      });
+      this.requestData(bounds, def);
     });
   }
 
   requestData(bounds, def) {
-    return this.apiService.getHarbors({
-      portType: def.type,
-      minlat: bounds._southWest.lat,
-      minlon: bounds._southWest.lng,
-      maxlat: bounds._northEast.lat,
-      maxlon: bounds._northEast.lng
-    });
+    this.store.dispatch(
+      new AsyncGet({
+        portType: def.type,
+        minlat: bounds._southWest.lat,
+        minlon: bounds._southWest.lng,
+        maxlat: bounds._northEast.lat,
+        maxlon: bounds._northEast.lng
+      })
+    );
   }
 
   createMarker(harbor, icon) {
