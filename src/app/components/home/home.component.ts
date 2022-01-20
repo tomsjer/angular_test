@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ToggleActive } from 'src/app/store/actions/layer.actions';
 import { AppState } from 'src/app/store/reducers';
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
 
@@ -14,7 +15,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {}
 
-  onChange(e) {
-    console.log(e.target.checked);
+  onChange(e, type) {
+    this.store.dispatch(new ToggleActive(type));
   }
 }

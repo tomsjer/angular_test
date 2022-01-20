@@ -35,7 +35,10 @@ export function reducer(
         (layer) => layer.type === action.payload
       );
       const layers = state.layers.slice();
-      layers[i].active = !layers[i].active;
+      layers[i] = {
+        ...layers[i],
+        active: !layers[i].active
+      };
 
       return {
         ...state,

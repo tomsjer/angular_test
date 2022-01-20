@@ -3,7 +3,8 @@ import {
   OnInit,
   AfterViewInit,
   ElementRef,
-  ViewChild
+  ViewChild,
+  Input
 } from '@angular/core';
 import L from 'leaflet';
 import { ApiService } from '../../services/api.service';
@@ -12,11 +13,7 @@ import { AppState } from '../../store/reducers';
 import { getPorts, getLoading } from '../../store/reducers/ports.reducer';
 import { AsyncGet } from 'src/app/store/actions/ports.actions';
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
-
-const LAYER_DEFS = [
-  { type: 'port', icon: '/assets/icons/cruise.png', name: 'Ports' },
-  { type: 'cruise', icon: '/assets/icons/port.png', name: 'Cruises' }
-];
+import { Layer } from 'src/app/store/models/layer.model';
 
 @Component({
   selector: 'app-port-map',
@@ -25,7 +22,7 @@ const LAYER_DEFS = [
 })
 export class PortMapComponent implements AfterViewInit {
   @ViewChild('mapRef') mapRef: ElementRef;
-
+  @Input('layerDefs') layerDefs: Layer[] = [];
   _map: any;
   _icons: any;
   _iconLayers: any;
@@ -67,7 +64,7 @@ export class PortMapComponent implements AfterViewInit {
     ).addTo(this._map);
 
     // Add the port/cruise layers
-    this._icons = LAYER_DEFS.map((def) =>
+    this._icons = this.layerDefs.map((def) =>
       L.icon({
         iconUrl: def.icon,
         iconSize: [25, 25],
@@ -75,25 +72,37 @@ export class PortMapComponent implements AfterViewInit {
         popupAnchor: [0, -25]
       })
     );
-    this._iconLayers = LAYER_DEFS.map((def) => new L.LayerGroup());
+    this._iconLayers = this.layerDefs.map((def) => new L.LayerGroup());
     this._iconLayers.forEach((l) => this._map.addLayer(l));
 
     // Whenever the user pans, load data for the new bounds
     this._map.on('moveend', () => this.loadLayerData(this._map.getBounds()));
 
     this.store.select(getPorts).subscribe((harbors) => {
-      LAYER_DEFS.forEach((def, i) => {
+      this.layerDefs.forEach((def, i) => {
         this.renderHarbors(harbors, this._icons[i], this._iconLayers[i]);
       });
     });
+
+    // this.layers$.subscribe((layers) => {
+    //   this.layerDefs.forEach((def, i) => {
+    //     if (def.active) {
+    //       this.loadLayerData(this._map.getBounds());
+    //     } else {
+    //       this._iconLayers[i].clearLayers();
+    //     }
+    //   });
+    // });
 
     this.loadLayerData(this._map.getBounds());
   }
 
   loadLayerData(bounds) {
-    LAYER_DEFS.forEach((def, i) => {
-      this.requestData(bounds, def);
-    });
+    this.layerDefs
+      .filter((layer) => layer.active)
+      .forEach((def, i) => {
+        this.requestData(bounds, def);
+      });
   }
 
   requestData(bounds, def) {

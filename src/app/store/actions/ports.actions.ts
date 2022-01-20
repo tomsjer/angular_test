@@ -14,7 +14,7 @@ export class AsyncGet implements Action {
 
 export class AsyncGetSuccess implements Action {
   readonly type = PortsActionTypes.ASYNC_GET_SUCCESS;
-  constructor(public payload?: Port[]) {}
+  constructor(public payload?: any) {}
 }
 
 export class AsyncGetError implements Action {

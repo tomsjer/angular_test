@@ -23,7 +23,15 @@ export class PortsEffects {
     switchMap((action: PortActions) =>
       this.harborService
         .getHarbors(action.payload)
-        .pipe(map((ports) => new AsyncGetSuccess(ports)))
+        .pipe(
+          map(
+            (ports) =>
+              new AsyncGetSuccess({
+                ports: ports,
+                type: action.payload.portType
+              })
+          )
+        )
     )
   );
 }

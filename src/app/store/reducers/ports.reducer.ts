@@ -17,7 +17,11 @@ export function reducer(state: PortsState = initialState, action: PortActions) {
       return { ...state, loading: true };
 
     case PortsActionTypes.ASYNC_GET_SUCCESS:
-      return { ...state, loading: false, ports: action.payload };
+      const ports = [
+        ...state.ports.filter((port) => port.type !== action.payload.type),
+        ...action.payload.ports
+      ];
+      return { ...state, loading: false, ports };
 
     case PortsActionTypes.ASYNC_GET_ERROR:
       return { ...state, loading: false };
