@@ -7,9 +7,10 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { ApiService } from './services/api.service';
-import { metaReducers, reducers } from './reducers';
+import { metaReducers, reducers } from './store/reducers';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from 'src/environments/environment';
+import { PortsEffects } from './store/effects/ports.effects';
 
 @NgModule({
   imports: [
@@ -18,7 +19,7 @@ import { environment } from 'src/environments/environment';
     AppRoutingModule,
     StoreRouterConnectingModule.forRoot({ stateKey: 'router' }),
     StoreModule.forRoot(reducers, { metaReducers }),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([PortsEffects]),
     StoreDevtoolsModule.instrument({
       name: 'Expero Ports Map App',
       logOnly: environment.production

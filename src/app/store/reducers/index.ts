@@ -1,6 +1,8 @@
 import { ActionReducerMap, ActionReducer, MetaReducer } from '@ngrx/store';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 import * as fromRouter from '@ngrx/router-store';
+import { reducer as portsReducer } from './ports.reducer';
+import { PortsState } from '../models/port.model';
 
 /**
  * storeFreeze prevents state from being mutated. When mutation occurs, an
@@ -13,8 +15,9 @@ import { storeFreeze } from 'ngrx-store-freeze';
  * As mentioned, we treat each reducer like a table in a database. This means
  * our top level state interface is just a map of keys to inner state types.
  */
-export interface State {
+export interface AppState {
   router: fromRouter.RouterReducerState;
+  ports: PortsState;
 }
 
 /**
@@ -22,13 +25,16 @@ export interface State {
  * These reducer functions are called with each dispatched action
  * and the current or initial state and return a new immutable state.
  */
-export const reducers: ActionReducerMap<State> = {
-  router: fromRouter.routerReducer
+export const reducers: ActionReducerMap<AppState> = {
+  router: fromRouter.routerReducer,
+  ports: portsReducer
 };
 
 // console.log all actions
-export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
-  return function (state: State, action: any): State {
+export function logger(
+  reducer: ActionReducer<AppState>
+): ActionReducer<AppState> {
+  return function (state: AppState, action: any): AppState {
     const newState = reducer(state, action);
     console.log('action', action, {
       prevState: state,
@@ -43,6 +49,6 @@ export function logger(reducer: ActionReducer<State>): ActionReducer<State> {
  * the root meta-reducer. To add more meta-reducers, provide an array of meta-reducers
  * that will be composed to form the root meta-reducer.
  */
-export const metaReducers: MetaReducer<State>[] = !environment.production
+export const metaReducers: MetaReducer<AppState>[] = !environment.production
   ? [logger, storeFreeze]
-  : [];
+  : [storeFreeze]; // NOTE: should storeFreeze be available on prod?
