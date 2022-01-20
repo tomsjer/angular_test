@@ -1,12 +1,11 @@
 <app-port-map [layerDefs]="layers$ | async"></app-port-map>
-<div *ngFor="let layer of layers$ | async">
-  <p>{{ layer.name }} - {{ layer.type }}</p>
-  <label>
-    active
-    <input
-      type="checkbox"
-      (change)="onChange($event, layer.type)"
-      [checked]="layer.active"
-    />
-  </label>
+
+<div class="sidebar">
+  <app-ports-list
+    [ports]="ports$ | async"
+    [layers]="layers$ | async"
+    [selectedPort]="selectedPort$ | async"
+    (onChange)="onChange($event)"
+    (onClick)="onClick($event)"
+  ></app-ports-list>
 </div>

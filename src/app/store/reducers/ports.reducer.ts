@@ -8,8 +8,7 @@ import { Actions } from '@ngrx/effects';
 const initialState: PortsState = {
   ports: [],
   loading: false,
-  START_LATLNG: [28.913943, -94.131125],
-  START_ZOOM: 7
+  selectedPort: null
 };
 
 export function reducer(state: PortsState = initialState, action: PortActions) {
@@ -22,6 +21,15 @@ export function reducer(state: PortsState = initialState, action: PortActions) {
 
     case PortsActionTypes.ASYNC_GET_ERROR:
       return { ...state, loading: false };
+
+    case PortsActionTypes.SELECT_PORT:
+      return {
+        ...state,
+        selectedPort: state.ports.find((port) => port.id === action.payload)
+      };
+
+    case PortsActionTypes.CLEAR_SELECTION:
+      return { ...state, selectedPort: null };
 
     default:
       return state;
@@ -38,4 +46,9 @@ export const getPorts = createSelector(
 export const getLoading = createSelector(
   selectFeature,
   (state: PortsState) => state.loading
+);
+
+export const getSelectedPort = createSelector(
+  selectFeature,
+  (state: PortsState) => state.selectedPort
 );

@@ -26,6 +26,5 @@ export interface PortQueryParams {
 export interface PortsState {
   ports: Port[];
   loading: boolean;
-  START_LATLNG: number[];
-  START_ZOOM: number;
+  selectedPort: Port;
 }

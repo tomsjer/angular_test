@@ -26,6 +26,7 @@ import { PortsEffects } from './store/effects/ports.effects';
     })
   ],
   providers: [ApiService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  declarations: []
 })
 export class AppModule {}

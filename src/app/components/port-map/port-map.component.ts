@@ -10,8 +10,16 @@ import L from 'leaflet';
 import { ApiService } from '../../services/api.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/reducers';
-import { getPorts, getLoading } from '../../store/reducers/ports.reducer';
-import { AsyncGet } from 'src/app/store/actions/ports.actions';
+import {
+  getPorts,
+  getLoading,
+  getSelectedPort
+} from '../../store/reducers/ports.reducer';
+import {
+  AsyncGet,
+  ClearSelection,
+  SelectPort
+} from 'src/app/store/actions/ports.actions';
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
 import { Layer } from 'src/app/store/models/layer.model';
 
@@ -26,9 +34,11 @@ export class PortMapComponent implements AfterViewInit {
   _map: any;
   _iconsMap: any;
   _iconLayersMap: any;
+  _markersMap: any = {};
   _requestId: any;
 
   layers$ = this.store.select(getLayers);
+  selectedPort$ = this.store.select(getSelectedPort);
 
   constructor(
     private elem: ElementRef,
@@ -82,10 +92,17 @@ export class PortMapComponent implements AfterViewInit {
 
     // Whenever the user pans, load data for the new bounds
     this._map.on('moveend', () => this.loadLayerData(this._map.getBounds()));
+    this._map.on('popupclose', () => this.store.dispatch(new ClearSelection()));
 
     this.store
       .select(getPorts)
       .subscribe((harbors) => this.renderHarbors(harbors));
+
+    this.selectedPort$.subscribe((selected) => {
+      if (selected) {
+        this._markersMap[selected.id].openPopup();
+      }
+    });
 
     this.layers$.subscribe((layers) => {
       this.layerDefs = layers;
@@ -118,13 +135,19 @@ export class PortMapComponent implements AfterViewInit {
   createMarker(harbor, icon) {
     return L.marker([harbor.latitude, harbor.longitude], {
       icon: icon
-    }).bindPopup(`<b>${harbor.name}</b><br>city: ${harbor.city}`);
+    })
+      .bindPopup(`<b>${harbor.name}</b><br>city: ${harbor.city}`)
+      .on('click', () => this.store.dispatch(new SelectPort(harbor.id)))
+      .on('close', () => console.log('asdf'));
   }
 
   renderHarbors(harbors) {
     for (const harbor of harbors) {
       this._iconLayersMap[harbor.type].addLayer(
-        this.createMarker(harbor, this._iconsMap[harbor.type])
+        (this._markersMap[harbor.id] = this.createMarker(
+          harbor,
+          this._iconsMap[harbor.type]
+        ))
       );
     }
   }

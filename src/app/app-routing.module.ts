@@ -6,6 +6,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PortMapComponent } from './components/port-map/port-map.component';
+import { PortsListComponent } from './components/ports-list/ports-list.component';
+import { SideBarComponent } from './components/side-bar/side-bar.component';
 
 export const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Home ' } },
@@ -23,7 +25,9 @@ export const appRoutes: Routes = [
     AppComponent,
     PageNotFoundComponent,
     HomeComponent,
-    PortMapComponent
+    PortMapComponent,
+    PortsListComponent,
+    SideBarComponent
   ]
 })
 export class AppRoutingModule {}

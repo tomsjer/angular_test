@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ToggleActive } from 'src/app/store/actions/layer.actions';
+import { SelectPort } from 'src/app/store/actions/ports.actions';
 import { AppState } from 'src/app/store/reducers';
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
+import {
+  getPorts,
+  getSelectedPort
+} from 'src/app/store/reducers/ports.reducer';
 
 @Component({
   selector: 'app-home',
@@ -11,11 +16,21 @@ import { getLayers } from 'src/app/store/reducers/layer.reducer';
 })
 export class HomeComponent implements OnInit {
   layers$ = this.store.select(getLayers);
+  ports$ = this.store.select(getPorts);
+  selectedPort$ = this.store.select(getSelectedPort);
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {}
 
-  onChange(e, type) {
+  onChange(type) {
     this.store.dispatch(new ToggleActive(type));
   }
+
+  onClick(id) {
+    this.store.dispatch(new SelectPort(id));
+  }
+
+  // public isSelected(id: string):boolean {
+  //   return this.selectedPort$.
+  // }
 }

@@ -1,0 +1,19 @@
+<div *ngFor="let layer of layers">
+  <p>{{ layer.name }} - {{ layer.type }}</p>
+  <label>
+    active
+    <input
+      type="checkbox"
+      (change)="onChange.emit(layer.type)"
+      [checked]="layer.active"
+    />
+  </label>
+</div>
+<div>SELECTED: {{ selectedPort | json }}</div>
+
+<div *ngFor="let port of ports" (click)="onClick.emit(port.id)">
+  <p>
+    {{ port.name }} - {{ port.id }}
+    <b *ngIf="port.id === selectedPort?.id">Selected</b>
+  </p>
+</div>

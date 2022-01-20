@@ -20,7 +20,7 @@ export class PortsEffects {
   @Effect()
   asyncGet$ = this.actions$.pipe(
     ofType(PortsActionTypes.ASYNC_GET),
-    switchMap((action: PortActions) => {
+    switchMap((action: any) => {
       const types = action.payload.activeLayers;
       return this.harborService
         .getHarbors(action.payload)
