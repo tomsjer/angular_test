@@ -9,6 +9,8 @@ import { NgModule } from '@angular/core';
 import { PortMapComponent } from './components/port-map/port-map.component';
 import { PortsListComponent } from './components/ports-list/ports-list.component';
 import { CustomMaterialModule } from './modules/material/custom-material.module';
+import { PopupComponent } from './components/popup/popup.component';
+import { PopupDirective } from './components/popup/popup.directive';
 
 export const appRoutes: Routes = [
   { path: '', component: HomeComponent, data: { title: 'Home ' } },
@@ -33,7 +35,10 @@ export const appRoutes: Routes = [
     HomeComponent,
     PortMapComponent,
     PortsListComponent,
-    DetailComponent
-  ]
+    DetailComponent,
+    PopupComponent,
+    PopupDirective
+  ],
+  entryComponents: [PopupComponent]
 })
 export class AppRoutingModule {}

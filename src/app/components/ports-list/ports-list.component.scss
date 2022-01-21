@@ -1,0 +1,34 @@
+// Import theming functions
+@import '~@angular/material/theming';
+
+$primary: mat-palette($mat-blue-grey, A700);
+$accent: mat-palette($mat-blue, A200, A100, A700);
+
+.ports-list {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.port-name {
+  flex: 1;
+  text-align: left;
+  padding-left: 8px;
+}
+
+.layer-name {
+  display: block;
+  margin-top: 6px;
+  float: right;
+  margin-left: 8px;
+}
+
+.mat-list-item {
+  background-color: white; // mat-color($primary);
+  border-color: mat-color($primary);
+  // color: mat-color($primary, '100-contrast');
+  &.selected {
+    background-color: mat-color($accent); // mat-color($primary);
+    border-color: mat-color($accent);
+    color: white;
+  }
+}

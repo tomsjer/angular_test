@@ -30,7 +30,6 @@ import { CustomMaterialModule } from './modules/material/custom-material.module'
     })
   ],
   providers: [ApiService],
-  bootstrap: [AppComponent],
-  declarations: []
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

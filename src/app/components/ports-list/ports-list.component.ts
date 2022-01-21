@@ -5,7 +5,7 @@ import { Port } from '../../store/models/port.model';
 @Component({
   selector: 'app-ports-list',
   templateUrl: './ports-list.component.html',
-  styleUrls: ['./ports-list.component.css']
+  styleUrls: ['./ports-list.component.scss']
 })
 export class PortsListComponent {
   @Input('layers') layers: Layer[] = [];

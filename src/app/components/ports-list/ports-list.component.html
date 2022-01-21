@@ -1,18 +1,25 @@
-<mat-list>
+<mat-nav-list>
   <mat-list-item *ngFor="let layer of layers">
     <mat-slide-toggle
+      mat-line
       (change)="onChange.emit(layer.type)"
       [checked]="layer.active"
-      ><mat-icon matListIcon>{{ layer.material_icon }}</mat-icon
-      >{{ layer.name }}</mat-slide-toggle
+      ><mat-icon matListIcon color="accent">{{ layer.material_icon }}</mat-icon>
+      <span class="layer-name">{{ layer.name }}</span></mat-slide-toggle
     >
   </mat-list-item>
-</mat-list>
+</mat-nav-list>
 <mat-divider></mat-divider>
 <mat-nav-list class="ports-list">
-  <mat-list-item *ngFor="let port of ports" (click)="onClick.emit(port.id)">
-    <mat-icon matListIcon>{{ getIconByType(port.type) }}</mat-icon>
-    <p>{{ port.name }}</p>
+  <mat-list-item
+    *ngFor="let port of ports"
+    (click)="onClick.emit(port.id)"
+    [class.selected]="selected(port.id)"
+  >
+    <mat-icon matListIcon [color]="selected(port.id) ? 'white' : 'accent'">{{
+      getIconByType(port.type)
+    }}</mat-icon>
+    <p class="port-name">{{ port.name }}</p>
     <a
       *ngIf="selected(port.id) && !hasId()"
       class="detail-icon"

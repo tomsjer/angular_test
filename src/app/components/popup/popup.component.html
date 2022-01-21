@@ -1,0 +1,12 @@
+<mat-card>
+  <h3>{{ name }}</h3>
+  <a
+    class="detail-icon"
+    mat-button
+    color="accent"
+    [routerLink]="id"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+    ><mat-icon>description</mat-icon> View details</a
+  >
+</mat-card>

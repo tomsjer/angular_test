@@ -6,3 +6,16 @@
   top: 64px;
   z-index: -1;
 }
+
+.custom-popup {
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-content,
+  .leaflet-popup-tip {
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+  .leaflet-popup-close-button {
+    display: none;
+  }
+}

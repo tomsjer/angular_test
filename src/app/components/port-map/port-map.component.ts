@@ -4,7 +4,11 @@ import {
   AfterViewInit,
   ElementRef,
   ViewChild,
-  Input
+  Input,
+  ComponentFactoryResolver,
+  Injector,
+  ViewEncapsulation,
+  ChangeDetectorRef
 } from '@angular/core';
 import L from 'leaflet';
 import { ApiService } from '../../services/api.service';
@@ -23,14 +27,18 @@ import {
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
 import { Layer } from 'src/app/store/models/layer.model';
 import { Subscription } from 'rxjs';
+import { PopupComponent } from '../popup/popup.component';
+import { PopupDirective } from '../popup/popup.directive';
 
 @Component({
   selector: 'app-port-map',
   templateUrl: './port-map.component.html',
-  styleUrls: ['./port-map.component.scss']
+  styleUrls: ['./port-map.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PortMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapRef') mapRef: ElementRef;
+  @ViewChild(PopupDirective) popupHost!: PopupDirective;
   @Input('layerDefs') layerDefs: Layer[] = [];
   _map: any;
   _iconsMap: any;
@@ -47,7 +55,10 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   constructor(
     private elem: ElementRef,
     public apiService: ApiService,
-    public store: Store<AppState>
+    public store: Store<AppState>,
+    private resolver: ComponentFactoryResolver,
+    private injector: Injector,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngAfterViewInit() {
@@ -116,7 +127,9 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
       this.selectedPort$.subscribe((selected) => {
         if (selected) {
           this._selectedId = selected.id;
-          this._markersMap[this._selectedId].openPopup();
+          if (!this._markersMap[this._selectedId].isPopupOpen()) {
+            this._markersMap[this._selectedId].fire('click');
+          }
         } else {
           this._selectedId = null;
         }
@@ -177,14 +190,37 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   }
 
   createMarker(harbor, icon) {
-    return L.marker([harbor.latitude, harbor.longitude], {
+    const marker = L.marker([harbor.latitude, harbor.longitude], {
       icon: icon
-    })
-      .bindPopup(`<b>${harbor.name}</b><br>city: ${harbor.city}`, {
-        id: harbor.id
-      })
-      .on('click', () => this.store.dispatch(new SelectPort(harbor.id)))
-      .on('close', () => console.log('asdf'));
+    }).bindPopup(null, {
+      id: harbor.id,
+      className: 'custom-popup'
+    });
+
+    // On every marker click, we update the hidden angular material popup
+    // in order to copy its html to the leaflet popup.
+    marker.on('click', () => {
+      // if (this._selectedId !== harbor.id) {
+      this.store.dispatch(new SelectPort(harbor.id));
+      // }
+      this.renderCustomPopup(harbor, marker);
+    });
+
+    return marker;
+  }
+
+  renderCustomPopup(harbor, marker) {
+    const viewContainerRef = this.popupHost.viewContainerRef;
+    viewContainerRef.clear();
+
+    const componentRef = viewContainerRef.createComponent(
+      this.resolver.resolveComponentFactory(PopupComponent)
+    );
+    componentRef.instance.name = harbor.name;
+    componentRef.instance.id = harbor.id;
+    this.changeDetectorRef.detectChanges();
+
+    marker.setPopupContent(componentRef.location.nativeElement);
   }
 
   renderHarbors(harbors) {
