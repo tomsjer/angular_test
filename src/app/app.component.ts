@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AsyncGet, SelectPort } from './store/actions/ports.actions';
+import {
+  AsyncGet,
+  ClearSelection,
+  SelectPort
+} from './store/actions/ports.actions';
 import { AppState, getId } from './store/reducers';
 import {
   getPorts,
@@ -47,6 +51,8 @@ export class AppComponent implements OnInit {
   }
 
   onClick(id) {
+    // FIXME: testing if clearing selection before closing popup helps
+    this.store.dispatch(new ClearSelection());
     this.store.dispatch(new SelectPort(id));
   }
 }

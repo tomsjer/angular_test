@@ -1,6 +1,6 @@
 import {
   Component,
-  OnInit,
+  OnDestroy,
   AfterViewInit,
   ElementRef,
   ViewChild,
@@ -22,13 +22,14 @@ import {
 } from 'src/app/store/actions/ports.actions';
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
 import { Layer } from 'src/app/store/models/layer.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-port-map',
   templateUrl: './port-map.component.html',
   styleUrls: ['./port-map.component.scss']
 })
-export class PortMapComponent implements AfterViewInit {
+export class PortMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapRef') mapRef: ElementRef;
   @Input('layerDefs') layerDefs: Layer[] = [];
   _map: any;
@@ -36,6 +37,8 @@ export class PortMapComponent implements AfterViewInit {
   _iconLayersMap: any;
   _markersMap: any = {};
   _requestId: any;
+
+  private subs: Subscription[] = [];
 
   layers$ = this.store.select(getLayers);
   selectedPort$ = this.store.select(getSelectedPort);
@@ -90,26 +93,61 @@ export class PortMapComponent implements AfterViewInit {
       return acc;
     }, {});
 
-    // Whenever the user pans, load data for the new bounds
-    this._map.on('moveend', () => this.loadLayerData(this._map.getBounds()));
-    this._map.on('popupclose', () => this.store.dispatch(new ClearSelection()));
-
-    this.store
-      .select(getPorts)
-      .subscribe((harbors) => this.renderHarbors(harbors));
-
-    this.selectedPort$.subscribe((selected) => {
-      if (selected) {
-        this._markersMap[selected.id].openPopup();
-      }
-    });
-
-    this.layers$.subscribe((layers) => {
-      this.layerDefs = layers;
-      this.loadLayerData(this._map.getBounds());
-    });
+    this.addMapListeners();
+    this.addStoreListeners();
 
     this.loadLayerData(this._map.getBounds());
+  }
+
+  ngOnDestroy(): void {
+    this.removeMapListeners();
+    this.removeStoreListeners();
+  }
+
+  addStoreListeners() {
+    this.subs.push(
+      this.store
+        .select(getPorts)
+        .subscribe((harbors) => this.renderHarbors(harbors))
+    );
+
+    this.subs.push(
+      this.selectedPort$.subscribe((selected) => {
+        if (selected) {
+          this._markersMap[selected.id].openPopup();
+        }
+      })
+    );
+
+    this.subs.push(
+      this.layers$.subscribe((layers) => {
+        this.layerDefs = layers;
+        this.loadLayerData(this._map.getBounds());
+      })
+    );
+  }
+
+  removeStoreListeners() {
+    this.subs.forEach((sub) => sub.unsubscribe());
+  }
+
+  addMapListeners() {
+    // Whenever the user pans, load data for the new bounds
+    this._map.on('moveend', this.handleMovend.bind(this));
+    this._map.on('popupclose', this.handlePopupClose.bind(this));
+  }
+
+  removeMapListeners() {
+    this._map.off('moveend', this.handleMovend);
+    this._map.off('popupclose', this.handlePopupClose);
+  }
+
+  handleMovend() {
+    this.loadLayerData(this._map.getBounds());
+  }
+
+  handlePopupClose(e) {
+    console.log(e.popup.options.id);
   }
 
   loadLayerData(bounds) {
@@ -136,7 +174,9 @@ export class PortMapComponent implements AfterViewInit {
     return L.marker([harbor.latitude, harbor.longitude], {
       icon: icon
     })
-      .bindPopup(`<b>${harbor.name}</b><br>city: ${harbor.city}`)
+      .bindPopup(`<b>${harbor.name}</b><br>city: ${harbor.city}`, {
+        id: harbor.id
+      })
       .on('click', () => this.store.dispatch(new SelectPort(harbor.id)))
       .on('close', () => console.log('asdf'));
   }
