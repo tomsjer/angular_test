@@ -7,6 +7,9 @@ import {
   getPorts,
   getSelectedPort
 } from 'src/app/store/reducers/ports.reducer';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-detail',
@@ -14,12 +17,35 @@ import {
   styleUrls: ['./detail.component.css']
 })
 export class DetailComponent implements OnInit {
-  layers$ = this.store.select(getLayers);
-  ports$ = this.store.select(getPorts);
-  selectedPort$ = this.store.select(getSelectedPort);
-  router$ = this.store.select(getId);
+  layers$: Observable<any>;
+  ports$: Observable<any>;
+  selectedPort$: Observable<any>;
+  router$: Observable<any>;
+  /** Based on the screen size, switch from standard to one column per row */
+  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(({ matches }) => {
+      if (matches) {
+        return [
+          { title: 'Card 1', cols: 2, rows: 1 },
+          { title: 'Card 2', cols: 2, rows: 1 }
+        ];
+      }
 
-  constructor(private store: Store<AppState>) {}
+      return [
+        { title: 'Card 1', cols: 2, rows: 1 },
+        { title: 'Card 2', cols: 2, rows: 1 }
+      ];
+    })
+  );
+  constructor(
+    private store: Store<AppState>,
+    private breakpointObserver: BreakpointObserver
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.layers$ = this.store.select(getLayers);
+    this.ports$ = this.store.select(getPorts);
+    this.selectedPort$ = this.store.select(getSelectedPort);
+    this.router$ = this.store.select(getId);
+  }
 }

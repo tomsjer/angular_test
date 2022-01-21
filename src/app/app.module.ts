@@ -14,6 +14,14 @@ import { PortsEffects } from './store/effects/ports.effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './modules/material/custom-material.module';
 import { MapService } from './services/map.service';
+import {
+  MatGridListModule,
+  MatCardModule,
+  MatMenuModule,
+  MatIconModule,
+  MatButtonModule
+} from '@angular/material';
+import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   imports: [
@@ -28,9 +36,16 @@ import { MapService } from './services/map.service';
     StoreDevtoolsModule.instrument({
       name: 'Expero Ports Map App',
       logOnly: environment.production
-    })
+    }),
+    MatGridListModule,
+    MatCardModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    LayoutModule
   ],
   providers: [ApiService, MapService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  declarations: []
 })
 export class AppModule {}

@@ -187,9 +187,9 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
     // On every marker click, we update the hidden angular material popup
     // in order to copy its html to the leaflet popup.
     marker.on('click', () => {
-      // if (this._selectedId !== harbor.id) {
-      this.store.dispatch(new SelectPort(harbor.id));
-      // }
+      if (this._selectedId !== harbor.id) {
+        this.store.dispatch(new SelectPort(harbor.id));
+      }
       this.renderCustomPopup(harbor, marker);
     });
 

@@ -17,6 +17,10 @@ export class PortsListComponent {
 
   constructor() {}
 
+  handleClick(e: PointerEvent) {
+    e.stopPropagation();
+  }
+
   public getIconByType(type) {
     return this.layers.find((l) => l.type === type).material_icon;
   }

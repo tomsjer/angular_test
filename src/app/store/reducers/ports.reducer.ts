@@ -9,7 +9,7 @@ const initialState: PortsState = {
   ports: [],
   loading: false,
   selectedPort: null,
-  latLng: [28.913943, -94.131125],
+  latLng: [-41.0779028571996, -68.35809230804445],
   zoom: 7
 };
 

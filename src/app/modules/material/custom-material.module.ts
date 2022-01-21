@@ -8,7 +8,9 @@ import {
   MatIconModule,
   MatListModule,
   MatSlideToggleModule,
-  MatDividerModule
+  MatDividerModule,
+  MatGridListModule,
+  MatMenuModule
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 
@@ -23,7 +25,9 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatListModule,
     LayoutModule,
     MatSlideToggleModule,
-    MatDividerModule
+    MatDividerModule,
+    MatGridListModule,
+    MatMenuModule
   ],
   exports: [
     MatButtonModule,
@@ -35,7 +39,9 @@ import { LayoutModule } from '@angular/cdk/layout';
     MatListModule,
     LayoutModule,
     MatSlideToggleModule,
-    MatDividerModule
+    MatDividerModule,
+    MatGridListModule,
+    MatMenuModule
   ]
 })
 export class CustomMaterialModule {}

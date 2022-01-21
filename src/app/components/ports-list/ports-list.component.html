@@ -21,6 +21,7 @@
     }}</mat-icon>
     <p class="port-name">{{ port.name }}</p>
     <a
+      (click)="handleClick($event)"
       *ngIf="selected(port.id) && !hasId()"
       class="detail-icon"
       [routerLink]="port.id"
@@ -30,6 +31,7 @@
     >
     <a
       *ngIf="selected(port.id) && hasId()"
+      (click)="handleClick($event)"
       class="home-icon"
       routerLink="/"
       routerLinkActive="active-link"
