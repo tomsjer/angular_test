@@ -29,12 +29,7 @@
       <p><span class="label">Longitude:</span> {{ lon || 'N/D' }}</p>
     </div>
     <div class="map">
-      <mat-card>
-        <mat-card-content class="dashboard-card-content">
-          <div>MAP</div>
-          <div class="portmap--rot" #mapRef></div>
-        </mat-card-content>
-      </mat-card>
+      <div class="portmap--rot mat-elevation-z2" #mapRef></div>
     </div>
   </div>
 </div>

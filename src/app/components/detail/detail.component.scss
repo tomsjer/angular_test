@@ -22,7 +22,7 @@ a {
 .container {
   display: flex;
   .details {
-    flex: 1;
+    flex: 0.33;
     display: flex;
     flex-direction: column;
     & > {
@@ -37,6 +37,17 @@ a {
     }
   }
   .map {
-    flex: 1;
+    flex: 0.66;
+    display: block;
+    position: relative;
+    .mat-card {
+      display: flex;
+    }
+    .portmap--rot {
+      width: 66%;
+      height: 300px;
+      top: 32px;
+      z-index: 1;
+    }
   }
 }

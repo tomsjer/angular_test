@@ -6,6 +6,7 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core';
+import L from 'leaflet';
 import { Store } from '@ngrx/store';
 import { AppState, getId } from 'src/app/store/reducers';
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
@@ -37,6 +38,15 @@ export class DetailComponent implements OnInit, AfterViewInit, OnDestroy {
   _map: any;
   _latLng: any;
   _zoom: any;
+
+  //FIXME: this should be handled by MapService
+  _icon: any;
+  _marker: any;
+  _iconsLayersMap: any = {
+    cruise: '/assets/icons/port.png',
+    port: '/assets/icons/cruise.png'
+  };
+  _markerLayer: any;
 
   _subs: Subscription[] = [];
 
@@ -79,6 +89,18 @@ export class DetailComponent implements OnInit, AfterViewInit, OnDestroy {
             this.city = port.city;
             this.lat = port.latitude.toFixed(2);
             this.lon = port.longitude.toFixed(2);
+            this._latLng = [port.latitude, port.longitude];
+            this._icon = this.createIcon(this._iconsLayersMap[port.type]);
+            this._marker = this.createMarker(
+              port.latitude,
+              port.longitude,
+              this._icon
+            );
+            if (this._map) {
+              this._markerLayer.clearLayers();
+              this._markerLayer.addLayer(this._marker);
+              this._map.setView(this._latLng);
+            }
           });
         }
       })
@@ -101,10 +123,27 @@ export class DetailComponent implements OnInit, AfterViewInit, OnDestroy {
     // Initialize the Leaflet map
     this._map = this.mapService.createMap(element, this._latLng, this._zoom);
 
+    this._markerLayer = new L.LayerGroup();
+
+    this._map.addLayer(this._markerLayer);
+
     // Add the basemap tile layer
     this.mapService.createTileLayer(this._map);
   }
   ngOnDestroy(): void {
     this._subs.forEach((s) => s.unsubscribe());
+  }
+  createMarker(latitude, longitude, icon) {
+    return L.marker([latitude, longitude], {
+      icon: icon
+    });
+  }
+  createIcon(icon) {
+    return L.icon({
+      iconUrl: icon,
+      iconSize: [25, 25],
+      iconAnchor: [25, 25],
+      popupAnchor: [0, -25]
+    });
   }
 }

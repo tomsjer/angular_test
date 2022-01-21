@@ -41,10 +41,14 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild(PopupDirective) popupHost!: PopupDirective;
   @Input('layerDefs') layerDefs: Layer[] = [];
   @Input('initMapProps') initMapProps: any = {};
+
   _map: any;
+
+  //FIXME: this should be handled by MapService
   _iconsMap: any;
   _iconLayersMap: any;
   _markersMap: any = {};
+
   _requestId: any;
   _selectedId: string;
 
