@@ -11,8 +11,13 @@ export class PortsListComponent {
   @Input('layers') layers: Layer[] = [];
   @Input('ports') ports: Port[] = [];
   @Input('selectedPort') selectedPort: Port = null;
+  @Input('id') id: string = '';
   @Output('onChange') onChange = new EventEmitter<{ boolean; string }>();
   @Output('onClick') onClick = new EventEmitter<{ string }>();
 
   constructor() {}
+
+  public getIconByType(type) {
+    return this.layers.find((l) => l.type === type).material_icon;
+  }
 }

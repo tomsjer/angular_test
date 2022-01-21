@@ -13,6 +13,7 @@
       [ports]="ports$ | async"
       [layers]="layers$ | async"
       [selectedPort]="selectedPort$ | async"
+      [id]="routerId$ | async"
       (onChange)="onChange($event)"
       (onClick)="onClick($event)"
     ></app-ports-list>

@@ -13,12 +13,14 @@ const initialState: LayerState = {
     {
       type: PortType.PORT,
       icon: '/assets/icons/cruise.png',
+      material_icon: 'directions_boat',
       name: 'Ports',
       active: true
     },
     {
       type: PortType.CRUISE,
       icon: '/assets/icons/port.png',
+      material_icon: 'home_work',
       name: 'Cruises',
       active: true
     }

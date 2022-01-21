@@ -1,4 +1,9 @@
-import { ActionReducerMap, ActionReducer, MetaReducer } from '@ngrx/store';
+import {
+  ActionReducerMap,
+  ActionReducer,
+  MetaReducer,
+  createSelector
+} from '@ngrx/store';
 import { environment } from 'src/environments/environment';
 import * as fromRouter from '@ngrx/router-store';
 import { reducer as portsReducer } from './ports.reducer';
@@ -47,6 +52,12 @@ export function logger(
     return newState;
   };
 }
+
+export const getId = createSelector(
+  (state: AppState) => state.router,
+  (router: fromRouter.RouterReducerState) =>
+    router && router.state ? router.state.url : null
+);
 
 /**
  * By default, @ngrx/store uses combineReducers with the reducer map to compose

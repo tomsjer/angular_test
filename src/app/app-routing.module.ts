@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PortMapComponent } from './components/port-map/port-map.component';
 import { PortsListComponent } from './components/ports-list/ports-list.component';
-import { SideBarComponent } from './components/side-bar/side-bar.component';
 import { CustomMaterialModule } from './modules/material/custom-material.module';
 
 export const appRoutes: Routes = [
@@ -34,7 +33,6 @@ export const appRoutes: Routes = [
     HomeComponent,
     PortMapComponent,
     PortsListComponent,
-    SideBarComponent,
     DetailComponent
   ]
 })

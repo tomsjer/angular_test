@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AsyncGet, SelectPort } from './store/actions/ports.actions';
-import { AppState } from './store/reducers';
+import { AppState, getId } from './store/reducers';
 import {
   getPorts,
   getLoading,
@@ -33,6 +33,7 @@ export class AppComponent implements OnInit {
   ports$ = this.store.select(getPorts);
   loading$ = this.store.select(getLoading);
   selectedPort$ = this.store.select(getSelectedPort);
+  routerId$ = this.store.select(getId);
 
   constructor(
     private store: Store<AppState>,

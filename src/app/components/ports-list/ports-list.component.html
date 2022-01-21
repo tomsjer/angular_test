@@ -3,21 +3,32 @@
     <mat-slide-toggle
       (change)="onChange.emit(layer.type)"
       [checked]="layer.active"
+      ><mat-icon matListIcon>{{ layer.material_icon }}</mat-icon
       >{{ layer.name }}</mat-slide-toggle
     >
   </mat-list-item>
+  <mat-list-item>{{ id }}</mat-list-item>
 </mat-list>
 <mat-divider></mat-divider>
-<mat-nav-list>
+<mat-nav-list class="ports-list">
   <mat-list-item *ngFor="let port of ports" (click)="onClick.emit(port.id)">
-    {{ port.name }}
-    <div *ngIf="port.id === selectedPort?.id">
-      <a
-        [routerLink]="port.id"
-        routerLinkActive="active-link"
-        [routerLinkActiveOptions]="{ exact: true }"
-        >Details</a
-      >
-    </div>
+    <mat-icon matListIcon>{{ getIconByType(port.type) }}</mat-icon>
+    <p>{{ port.name }}</p>
+    <a
+      *ngIf="port.id === selectedPort?.id"
+      class="detail-icon"
+      [routerLink]="port.id"
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      ><mat-icon>description</mat-icon></a
+    >
+    <a
+      *ngIf="id"
+      class="home-icon"
+      routerLink=""
+      routerLinkActive="active-link"
+      [routerLinkActiveOptions]="{ exact: true }"
+      ><mat-icon>map</mat-icon></a
+    >
   </mat-list-item>
 </mat-nav-list>

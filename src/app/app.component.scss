@@ -19,12 +19,12 @@
 }
 
 .sidenav-container {
-  height: 100%;
+  height: calc(100% - 64px);
 }
 
 .sidenav {
   width: 300px;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .mat-toolbar.mat-primary {
