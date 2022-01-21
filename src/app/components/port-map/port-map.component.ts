@@ -10,7 +10,6 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import L from 'leaflet';
-import { ApiService } from '../../services/api.service';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/reducers';
 import {
@@ -55,7 +54,6 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   selectedPort$ = this.store.select(getSelectedPort);
 
   constructor(
-    public apiService: ApiService,
     public store: Store<AppState>,
     private resolver: ComponentFactoryResolver,
     private changeDetectorRef: ChangeDetectorRef,

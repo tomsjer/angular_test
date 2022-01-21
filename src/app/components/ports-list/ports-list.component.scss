@@ -32,3 +32,7 @@ $accent: mat-palette($mat-blue, A200, A100, A700);
     color: white;
   }
 }
+
+.mat-nav-list {
+  border-right: solid 1px #ccc;
+}

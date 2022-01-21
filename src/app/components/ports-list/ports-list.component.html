@@ -19,7 +19,7 @@
     <mat-icon matListIcon [color]="selected(port.id) ? 'white' : 'accent'">{{
       getIconByType(port.type)
     }}</mat-icon>
-    <p class="port-name">{{ port.name }}</p>
+    <p class="port-name">{{ port.name || 'N/D' }}</p>
     <a
       (click)="handleClick($event)"
       *ngIf="selected(port.id) && !hasId()"
