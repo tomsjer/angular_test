@@ -20,4 +20,12 @@ export class PortsListComponent {
   public getIconByType(type) {
     return this.layers.find((l) => l.type === type).material_icon;
   }
+
+  public selected(id) {
+    return this.selectedPort && this.selectedPort.id === id;
+  }
+
+  public hasId() {
+    return this.id !== '/';
+  }
 }

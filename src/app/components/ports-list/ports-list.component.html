@@ -15,7 +15,7 @@
     <mat-icon matListIcon>{{ getIconByType(port.type) }}</mat-icon>
     <p>{{ port.name }}</p>
     <a
-      *ngIf="port.id === selectedPort?.id"
+      *ngIf="selected(port.id) && !hasId()"
       class="detail-icon"
       [routerLink]="port.id"
       routerLinkActive="active-link"
@@ -23,9 +23,9 @@
       ><mat-icon>description</mat-icon></a
     >
     <a
-      *ngIf="id"
+      *ngIf="selected(port.id) && hasId()"
       class="home-icon"
-      routerLink=""
+      routerLink="/"
       routerLinkActive="active-link"
       [routerLinkActiveOptions]="{ exact: true }"
       ><mat-icon>map</mat-icon></a
