@@ -5,6 +5,7 @@ import { SelectPort } from 'src/app/store/actions/ports.actions';
 import { AppState } from 'src/app/store/reducers';
 import { getLayers } from 'src/app/store/reducers/layer.reducer';
 import {
+  getInitMapProps,
   getPorts,
   getSelectedPort
 } from 'src/app/store/reducers/ports.reducer';
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit {
   layers$ = this.store.select(getLayers);
   ports$ = this.store.select(getPorts);
   selectedPort$ = this.store.select(getSelectedPort);
+  initMapProps$ = this.store.select(getInitMapProps);
 
   constructor(private store: Store<AppState>) {}
 

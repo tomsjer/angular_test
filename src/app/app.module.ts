@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { PortsEffects } from './store/effects/ports.effects';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CustomMaterialModule } from './modules/material/custom-material.module';
+import { MapService } from './services/map.service';
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ import { CustomMaterialModule } from './modules/material/custom-material.module'
       logOnly: environment.production
     })
   ],
-  providers: [ApiService],
+  providers: [ApiService, MapService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

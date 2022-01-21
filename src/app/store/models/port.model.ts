@@ -27,4 +27,6 @@ export interface PortsState {
   ports: Port[];
   loading: boolean;
   selectedPort: Port;
+  latLng: number[];
+  zoom: number;
 }

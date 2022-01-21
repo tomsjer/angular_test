@@ -1,1 +1,4 @@
-<app-port-map [layerDefs]="layers$ | async"></app-port-map>
+<app-port-map
+  [initMapProps]="initMapProps$ | async"
+  [layerDefs]="layers$ | async"
+></app-port-map>

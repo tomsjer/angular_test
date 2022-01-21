@@ -6,7 +6,6 @@ import {
   ViewChild,
   Input,
   ComponentFactoryResolver,
-  Injector,
   ViewEncapsulation,
   ChangeDetectorRef
 } from '@angular/core';
@@ -17,7 +16,8 @@ import { AppState } from '../../store/reducers';
 import {
   getPorts,
   getLoading,
-  getSelectedPort
+  getSelectedPort,
+  getInitMapProps
 } from '../../store/reducers/ports.reducer';
 import {
   AsyncGet,
@@ -29,6 +29,7 @@ import { Layer } from 'src/app/store/models/layer.model';
 import { Subscription } from 'rxjs';
 import { PopupComponent } from '../popup/popup.component';
 import { PopupDirective } from '../popup/popup.directive';
+import { MapService } from 'src/app/services/map.service';
 
 @Component({
   selector: 'app-port-map',
@@ -40,6 +41,7 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapRef') mapRef: ElementRef;
   @ViewChild(PopupDirective) popupHost!: PopupDirective;
   @Input('layerDefs') layerDefs: Layer[] = [];
+  @Input('initMapProps') initMapProps: any = {};
   _map: any;
   _iconsMap: any;
   _iconLayersMap: any;
@@ -53,40 +55,25 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   selectedPort$ = this.store.select(getSelectedPort);
 
   constructor(
-    private elem: ElementRef,
     public apiService: ApiService,
     public store: Store<AppState>,
     private resolver: ComponentFactoryResolver,
-    private injector: Injector,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private mapService: MapService
   ) {}
 
   ngAfterViewInit() {
-    const START_LATLNG = [28.913943, -94.131125];
-    const START_ZOOM = 7;
-
     const element = this.mapRef.nativeElement;
 
     // Initialize the Leaflet map
-    this._map = L.map(element, { trackResize: true, minZoom: 4 }).setView(
-      START_LATLNG,
-      START_ZOOM
+    this._map = this.mapService.createMap(
+      element,
+      this.initMapProps.latLng,
+      this.initMapProps.zoom
     );
 
     // Add the basemap tile layer
-    L.tileLayer(
-      'https://api.mapbox.com/styles/v1/{id}/{z}/{x}/{y}?access_token={accessToken}',
-      {
-        attribution:
-          'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-          '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>' +
-          ', Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/satellite-streets-v10/tiles/256',
-        accessToken:
-          'pk.eyJ1IjoiYnJhbmRvbmRldiIsImEiOiJjajFwNjNmODAwMDBnMzFwbDJ4N21yZmFmIn0.YC44JxjiM36-I54e-hVQUA'
-      }
-    ).addTo(this._map);
+    this.mapService.createTileLayer(this._map);
 
     // Add the port/cruise layers
     this._iconsMap = this.layerDefs.reduce((acc, curr) => {
@@ -107,8 +94,7 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
 
     this.addMapListeners();
     this.addStoreListeners();
-
-    this.loadLayerData(this._map.getBounds());
+    this.loadLayerData();
   }
 
   ngOnDestroy(): void {
@@ -139,7 +125,7 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
     this.subs.push(
       this.layers$.subscribe((layers) => {
         this.layerDefs = layers;
-        this.loadLayerData(this._map.getBounds());
+        this.loadLayerData();
       })
     );
   }
@@ -150,17 +136,13 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
 
   addMapListeners() {
     // Whenever the user pans, load data for the new bounds
-    this._map.on('moveend', this.handleMovend.bind(this));
+    this._map.on('moveend', this.loadLayerData.bind(this));
     this._map.on('popupclose', this.handlePopupClose.bind(this));
   }
 
   removeMapListeners() {
-    this._map.off('moveend', this.handleMovend);
+    this._map.off('moveend', this.loadLayerData);
     this._map.off('popupclose', this.handlePopupClose);
-  }
-
-  handleMovend() {
-    this.loadLayerData(this._map.getBounds());
   }
 
   handlePopupClose(e) {
@@ -169,14 +151,17 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  loadLayerData(bounds) {
+  loadLayerData() {
+    const bounds = this._map.getBounds();
+    const center = this._map.getCenter();
+    const zoom = this._map.getZoom();
     this.layerDefs
       .filter((layer) => !layer.active)
       .forEach((layer) => this._iconLayersMap[layer.type].clearLayers());
-    this.requestData(bounds);
+    this.requestData(bounds, [center.lat, center.lng], zoom);
   }
 
-  requestData(bounds) {
+  requestData(bounds, latLng, zoom) {
     const activeLayers = this.layerDefs.filter((layer) => layer.active);
     this.store.dispatch(
       new AsyncGet({
@@ -184,7 +169,9 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
         minlat: bounds._southWest.lat,
         minlon: bounds._southWest.lng,
         maxlat: bounds._northEast.lat,
-        maxlon: bounds._northEast.lng
+        maxlon: bounds._northEast.lng,
+        latLng,
+        zoom
       })
     );
   }

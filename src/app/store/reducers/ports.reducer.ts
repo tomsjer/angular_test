@@ -8,13 +8,20 @@ import { Actions } from '@ngrx/effects';
 const initialState: PortsState = {
   ports: [],
   loading: false,
-  selectedPort: null
+  selectedPort: null,
+  latLng: [28.913943, -94.131125],
+  zoom: 7
 };
 
 export function reducer(state: PortsState = initialState, action: PortActions) {
   switch (action.type) {
     case PortsActionTypes.ASYNC_GET:
-      return { ...state, loading: true };
+      return {
+        ...state,
+        loading: true,
+        latLng: action.payload.latLng,
+        zoom: action.payload.zoom
+      };
 
     case PortsActionTypes.ASYNC_GET_SUCCESS:
       return { ...state, loading: false, ports: action.payload };
@@ -51,4 +58,9 @@ export const getLoading = createSelector(
 export const getSelectedPort = createSelector(
   selectFeature,
   (state: PortsState) => state.selectedPort
+);
+
+export const getInitMapProps = createSelector(
+  selectFeature,
+  (state: PortsState) => ({ latLng: state.latLng, zoom: state.zoom })
 );
