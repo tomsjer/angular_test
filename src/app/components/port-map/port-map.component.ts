@@ -37,6 +37,7 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   _iconLayersMap: any;
   _markersMap: any = {};
   _requestId: any;
+  _selectedId: string;
 
   private subs: Subscription[] = [];
 
@@ -114,7 +115,10 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
     this.subs.push(
       this.selectedPort$.subscribe((selected) => {
         if (selected) {
-          this._markersMap[selected.id].openPopup();
+          this._selectedId = selected.id;
+          this._markersMap[this._selectedId].openPopup();
+        } else {
+          this._selectedId = null;
         }
       })
     );
@@ -147,7 +151,9 @@ export class PortMapComponent implements AfterViewInit, OnDestroy {
   }
 
   handlePopupClose(e) {
-    console.log(e.popup.options.id);
+    if (this._selectedId && this._selectedId === e.popup.options.id) {
+      this.store.dispatch(new ClearSelection());
+    }
   }
 
   loadLayerData(bounds) {
